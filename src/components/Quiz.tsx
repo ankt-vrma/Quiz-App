@@ -1,5 +1,4 @@
-
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { data } from "../assets/data";
 
 const Quiz = () => {
@@ -7,24 +6,15 @@ const Quiz = () => {
   let [lock, setLock] = useState(false);
   let [score, setScore] = useState(0);
   let [result, setResult] = useState(false);
-
-  let Option1 = useRef<HTMLLIElement>(null);
-  let Option2 = useRef<HTMLLIElement>(null);
-  let Option3 = useRef<HTMLLIElement>(null);
-  let Option4 = useRef<HTMLLIElement>(null);
-
-  let option_array = [Option1, Option2, Option3, Option4];
+  let [selected, setSelected] = useState<number | null>(null);
 
   const question = data[index];
 
-  const checkAnswer = (e: React.MouseEvent<HTMLLIElement>, ans: number) => {
+  const checkAnswer = (ans: number) => {
     if (!lock) {
+      setSelected(ans);
       if (question.ans === ans) {
-        e.currentTarget.classList.add("bg-green-600/80", "text-white", "shadow-glow-green");
         setScore((prev) => prev + 1);
-      } else {
-        e.currentTarget.classList.add("bg-red-600/80", "text-white", "shadow-glow-red");
-        option_array[question.ans - 1].current?.classList.add("bg-green-600/80", "text-white", "shadow-glow-green");
       }
       setLock(true);
     }
@@ -38,15 +28,7 @@ const Quiz = () => {
       }
       setIndex((prev) => prev + 1);
       setLock(false);
-      option_array.forEach((option) => {
-        option.current?.classList.remove(
-          "bg-green-600/80",
-          "bg-red-600/80",
-          "text-white",
-          "shadow-glow-green",
-          "shadow-glow-red"
-        );
-      });
+      setSelected(null);
     }
   };
 
@@ -55,6 +37,25 @@ const Quiz = () => {
     setLock(false);
     setScore(0);
     setResult(false);
+    setSelected(null);
+  };
+
+  const getOptionClass = (optIndex: number) => {
+    if (!lock) {
+      return "cursor-pointer p-3 border border-indigo-500/30 rounded-lg bg-black/40 hover:bg-indigo-800/40 hover:scale-105 hover:shadow-[0_0_15px_rgba(129,140,248,0.5)] transition";
+    }
+
+    if (selected === optIndex) {
+      return question.ans === optIndex
+        ? "p-3 border rounded-lg bg-green-600/80 text-white shadow-[0_0_15px_rgba(34,197,94,0.8)] animate-pulse"
+        : "p-3 border rounded-lg bg-red-600/80 text-white shadow-[0_0_15px_rgba(239,68,68,0.8)] animate-pulse";
+    }
+
+    if (question.ans === optIndex) {
+      return "p-3 border rounded-lg bg-green-600/80 text-white shadow-[0_0_15px_rgba(34,197,94,0.8)] animate-pulse";
+    }
+
+    return "p-3 border rounded-lg bg-black/40 text-gray-400";
   };
 
   return (
@@ -64,7 +65,7 @@ const Quiz = () => {
 
       <div className="relative z-10 bg-black/70 backdrop-blur-xl border border-indigo-500/40 shadow-[0_0_40px_rgba(99,102,241,0.7)] rounded-2xl p-8 w-full max-w-xl">
         <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent drop-shadow-md mb-6">
-          Five Eyes Quiz
+          🚀 Cosmic Quiz
         </h1>
         <hr className="mb-6 border-indigo-500/30" />
         {result ? (
@@ -86,32 +87,16 @@ const Quiz = () => {
               {index + 1}. {question.question}
             </h2>
             <ul className="space-y-3 mb-6">
-              <li
-                ref={Option1}
-                onClick={(e) => checkAnswer(e, 1)}
-                className="cursor-pointer p-3 border border-indigo-500/30 rounded-lg bg-black/40 hover:bg-indigo-800/40 hover:scale-105 hover:shadow-[0_0_15px_rgba(129,140,248,0.5)] transition"
-              >
+              <li onClick={() => checkAnswer(1)} className={getOptionClass(1)}>
                 {question.option1}
               </li>
-              <li
-                ref={Option2}
-                onClick={(e) => checkAnswer(e, 2)}
-                className="cursor-pointer p-3 border border-indigo-500/30 rounded-lg bg-black/40 hover:bg-indigo-800/40 hover:scale-105 hover:shadow-[0_0_15px_rgba(129,140,248,0.5)] transition"
-              >
+              <li onClick={() => checkAnswer(2)} className={getOptionClass(2)}>
                 {question.option2}
               </li>
-              <li
-                ref={Option3}
-                onClick={(e) => checkAnswer(e, 3)}
-                className="cursor-pointer p-3 border border-indigo-500/30 rounded-lg bg-black/40 hover:bg-indigo-800/40 hover:scale-105 hover:shadow-[0_0_15px_rgba(129,140,248,0.5)] transition"
-              >
+              <li onClick={() => checkAnswer(3)} className={getOptionClass(3)}>
                 {question.option3}
               </li>
-              <li
-                ref={Option4}
-                onClick={(e) => checkAnswer(e, 4)}
-                className="cursor-pointer p-3 border border-indigo-500/30 rounded-lg bg-black/40 hover:bg-indigo-800/40 hover:scale-105 hover:shadow-[0_0_15px_rgba(129,140,248,0.5)] transition"
-              >
+              <li onClick={() => checkAnswer(4)} className={getOptionClass(4)}>
                 {question.option4}
               </li>
             </ul>
@@ -134,4 +119,3 @@ const Quiz = () => {
 };
 
 export default Quiz;
-
