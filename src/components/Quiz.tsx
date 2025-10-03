@@ -65,13 +65,13 @@ const Quiz = () => {
 
       <div className="relative z-10 bg-black/70 backdrop-blur-xl border border-indigo-500/40 shadow-[0_0_40px_rgba(99,102,241,0.7)] rounded-2xl p-8 w-full max-w-xl">
         <h1 className="text-4xl font-extrabold text-center bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent drop-shadow-md mb-6">
-          🚀 Cosmic Quiz
+          Five Eyes Quiz
         </h1>
         <hr className="mb-6 border-indigo-500/30" />
         {result ? (
           <div className="text-center space-y-6">
             <h2 className="text-xl font-semibold text-gray-200">
-              🌌 You scored <span className="text-purple-400 font-bold">{score}</span> out of{" "}
+               You scored <span className="text-purple-400 font-bold">{score}</span> out of{" "}
               {data.length}
             </h2>
             <button
